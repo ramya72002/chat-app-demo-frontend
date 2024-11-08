@@ -8,6 +8,7 @@ import MessagePage from "../components/MessagePage";
 import AuthLayouts from "../layout";
 import Forgotpassword from "../pages/Forgotpassword";
 import SendEmail from "../pages/SendEmail";
+import SendSms from "../pages/SendSms";
 
 const router = createBrowserRouter([
 {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
         {
             path : 'sendEmail',
             element : <AuthLayouts><SendEmail/></AuthLayouts>
+        },
+        {
+            path : 'sendSms',
+            element : <AuthLayouts><SendSms/></AuthLayouts>
         },
         {
             path : "",

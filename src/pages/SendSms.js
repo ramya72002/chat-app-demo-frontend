@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import { useRouter } from 'next/router'; // Use `next/router` instead of `next/navigation`
+import { useNavigate } from 'react-router-dom'; // Assuming you are using react-router-dom for navigation
 import './SendSms.scss';
 
-const SendSMS = ({ selectedRecords, onBack }) => {
-  const router = useRouter();
+const SendSms = ({ selectedRecords }) => {
+  const navigate = useNavigate();
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [showPopup, setShowPopup] = useState(false);
 
-  const BATCH_SIZE = 5; // Set batch size to control number of SMS per request
+  const BATCH_SIZE = 5; // Set batch size to control the number of SMS per request
 
   const handleSendSMS = async () => {
     setLoading(true);
@@ -38,7 +38,7 @@ const SendSMS = ({ selectedRecords, onBack }) => {
           const maxAttempts = 3;
           while (attempts < maxAttempts) {
             try {
-              const response = await fetch('http://127.0.0.1:80/api/send_sms', {
+              const response = await fetch('/api/send_sms', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -72,9 +72,13 @@ const SendSMS = ({ selectedRecords, onBack }) => {
     }
   };
 
+  const redirectToHome = () => {
+    navigate('/'); // Redirect to the root path
+  };
+
   const handleClosePopup = () => {
     setShowPopup(false);
-    router.push('/ui/sendsms');
+    redirectToHome();
   };
 
   return (
@@ -95,7 +99,7 @@ const SendSMS = ({ selectedRecords, onBack }) => {
         {loading ? 'Sending...' : 'Send SMS'}
       </button>
 
-      <button onClick={onBack} className="backButton">Back</button>
+      <button onClick={redirectToHome} className="backButton">Back</button>
 
       {showPopup && (
         <div className="popup">
@@ -110,4 +114,4 @@ const SendSMS = ({ selectedRecords, onBack }) => {
   );
 };
 
-export default SendSMS;
+export default SendSms;

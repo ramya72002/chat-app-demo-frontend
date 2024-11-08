@@ -71,8 +71,8 @@ const SearchUsers = ({ onClose }) => {
             }));
             console.log("Selected Users Data:", sendSmsData);
 
-            const response = await axios.post('/api/sendSms', sendSmsData);
-            console.log("SMS sent successfully", response.data);
+            // const response = await axios.post('/api/sendSms', sendSmsData);
+            // console.log("SMS sent successfully", response.data);
 
             navigate('/sendSms', { state: { selectedRecords: selectedUsers } });
         } catch (error) {
