@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { IoChatbubbleEllipses } from "react-icons/io5";
-import { FaUserPlus } from "react-icons/fa";
+import { FaUserPlus,FaEnvelope,FaSms  } from "react-icons/fa";
 import { NavLink, useNavigate } from 'react-router-dom';
 import { BiLogOut } from "react-icons/bi";
 import Avatar from './Avatar'
@@ -100,7 +100,11 @@ const Sidebar = () => {
                     </div>
 
                     <div title='Send bulk email messages' onClick={()=>setOpenSearchUsers(true)} className='w-12 h-12 flex justify-center items-center cursor-pointer hover:bg-slate-200 rounded' >
-                        <FaUserPlus size={20}/>
+                        <FaEnvelope size={20}/>
+                    </div>
+
+                    <div title='Send bulk SMS messages' onClick={()=>setOpenSearchUsers(true)} className='w-12 h-12 flex justify-center items-center cursor-pointer hover:bg-slate-200 rounded' >
+                        <FaSms   size={20}/>
                     </div>
                 </div>
 
