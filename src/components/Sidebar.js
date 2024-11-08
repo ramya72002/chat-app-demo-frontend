@@ -12,6 +12,7 @@ import Divider from './Divider';
 import { FiArrowUpLeft } from "react-icons/fi";
 import SearchUser from './SearchUser';
 import SearchUsers from './SearchUsers';
+import SearchUsersSms from './SearchUsersSms';
 import { FaImage } from "react-icons/fa6";
 import { FaVideo } from "react-icons/fa6";
 import { logout } from '../redux/userSlice';
@@ -22,6 +23,7 @@ const Sidebar = () => {
     const [allUser,setAllUser] = useState([])
     const [openSearchUser,setOpenSearchUser] = useState(false)
     const [openSearchUsers,setOpenSearchUsers] = useState(false)
+    const [openSearchUsersSms,setOpenSearchUsersSms] = useState(false)
 
     const socketConnection = useSelector(state => state?.user?.socketConnection)
     const dispatch = useDispatch()
@@ -103,8 +105,8 @@ const Sidebar = () => {
                         <FaEnvelope size={20}/>
                     </div>
 
-                    <div title='Send bulk SMS messages' onClick={()=>setOpenSearchUsers(true)} className='w-12 h-12 flex justify-center items-center cursor-pointer hover:bg-slate-200 rounded' >
-                        <FaSms   size={20}/>
+                    <div title='Send bulk SMS messages' onClick={()=>setOpenSearchUsersSms(true)} className='w-12 h-12 flex justify-center items-center cursor-pointer hover:bg-slate-200 rounded' >
+                        <FaSms size={20}/>
                     </div>
                 </div>
 
@@ -213,8 +215,11 @@ const Sidebar = () => {
                     <SearchUsers onClose={()=>setOpenSearchUsers(false)}/>
                 )
             }
-
-
+                 {
+                openSearchUsersSms && (
+                    <SearchUsersSms onClose={()=>setOpenSearchUsersSms(false)}/>
+                )
+            }
         </div>
   )
 }
