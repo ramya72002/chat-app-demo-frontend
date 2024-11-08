@@ -10,17 +10,19 @@ const SearchUsers = ({ onClose }) => {
     const [searchUsers, setSearchUsers] = useState([]);
     const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState("");
-    const [selectedUsers, setSelectedUsers] = useState([]); // Store user objects with name and email
+    const [selectedUsers, setSelectedUsers] = useState([]);
     const [selectAll, setSelectAll] = useState(false);
     const navigate = useNavigate();
 
     const handleSearchUsers = async () => {
-        const URL = `${process.env.REACT_APP_BACKEND_URL}/api/search-user`;
+        const URL = `${process.env.REACT_APP_BACKEND_URL}/api/search-users`;
         try {
             setLoading(true);
             const response = await axios.post(URL, { search });
             setLoading(false);
             setSearchUsers(response.data.data);
+            console.log("usersdata", response.data.data);
+
             setSelectedUsers([]);
             setSelectAll(false);
         } catch (error) {
@@ -37,7 +39,12 @@ const SearchUsers = ({ onClose }) => {
             if (prevSelectedUsers.some(u => u.email === user.email)) {
                 return prevSelectedUsers.filter(u => u.email !== user.email);
             } else {
-                return [...prevSelectedUsers, { name: user.name, email: user.email }];
+                return [...prevSelectedUsers, { 
+                    name: user.name, 
+                    email: user.email,
+                    phone: user.phone,
+                    provider: user.provider 
+                }];
             }
         });
     };
@@ -46,13 +53,31 @@ const SearchUsers = ({ onClose }) => {
         if (selectAll) {
             setSelectedUsers([]);
         } else {
-            setSelectedUsers(searchUsers.map(user => ({ name: user.name, email: user.email,phone: user.phone })));
+            setSelectedUsers(searchUsers.map(user => ({
+                name: user.name, 
+                email: user.email,
+                phone: user.phone,
+                provider: user.provider
+            })));
         }
         setSelectAll(!selectAll);
     };
 
-    const handleNext = () => {
-        navigate('/sendEmail', { state: { selectedRecords: selectedUsers } });
+    const handleNext = async () => {
+        try {
+            const sendSmsData = selectedUsers.map(user => ({
+                phone: user.phone,
+                provider: user.provider
+            }));
+            console.log("Selected Users Data:", sendSmsData);
+
+            const response = await axios.post('/api/sendSms', sendSmsData);
+            console.log("SMS sent successfully", response.data);
+
+            navigate('/sendSms', { state: { selectedRecords: selectedUsers } });
+        } catch (error) {
+            toast.error("Error sending SMS: " + error?.message);
+        }
     };
 
     return (
