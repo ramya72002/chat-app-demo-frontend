@@ -11,6 +11,7 @@ import EditUserDetails from './EditUserDetails';
 import Divider from './Divider';
 import { FiArrowUpLeft } from "react-icons/fi";
 import SearchUser from './SearchUser';
+import SearchUsers from './SearchUsers';
 import { FaImage } from "react-icons/fa6";
 import { FaVideo } from "react-icons/fa6";
 import { logout } from '../redux/userSlice';
@@ -20,6 +21,8 @@ const Sidebar = () => {
     const [editUserOpen,setEditUserOpen] = useState(false)
     const [allUser,setAllUser] = useState([])
     const [openSearchUser,setOpenSearchUser] = useState(false)
+    const [openSearchUsers,setOpenSearchUsers] = useState(false)
+
     const socketConnection = useSelector(state => state?.user?.socketConnection)
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -93,6 +96,10 @@ const Sidebar = () => {
                     </NavLink>
 
                     <div title='add friend' onClick={()=>setOpenSearchUser(true)} className='w-12 h-12 flex justify-center items-center cursor-pointer hover:bg-slate-200 rounded' >
+                        <FaUserPlus size={20}/>
+                    </div>
+
+                    <div title='Send bulk email messages' onClick={()=>setOpenSearchUsers(true)} className='w-12 h-12 flex justify-center items-center cursor-pointer hover:bg-slate-200 rounded' >
                         <FaUserPlus size={20}/>
                     </div>
                 </div>
@@ -197,6 +204,12 @@ const Sidebar = () => {
                     <SearchUser onClose={()=>setOpenSearchUser(false)}/>
                 )
             }
+            {
+                openSearchUsers && (
+                    <SearchUsers onClose={()=>setOpenSearchUsers(false)}/>
+                )
+            }
+
 
         </div>
   )
