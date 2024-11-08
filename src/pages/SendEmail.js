@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import './SendEmail.scss';
 
-const SendEmail = ({ onBack, onClosePopup }) => {
+const SendEmail = ({ onBack }) => {
   const location = useLocation();
+  const navigate = useNavigate(); // useNavigate hook for programmatic navigation
   const selectedRecords = location.state?.selectedRecords || []; // Access selectedRecords
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
@@ -19,21 +20,21 @@ const SendEmail = ({ onBack, onClosePopup }) => {
       setShowPopup(true);
       return;
     }
-  
+
     setLoading(true);
     setSuccessMessage('');
     setErrorMessage('');
-  
+
     // Check if selectedRecords is empty
     if (selectedRecords.length === 0) {
       console.log("No records selected!");
       return;
     }
-  
+
     // Map over selectedRecords to get the emails and names
     const bccEmails = selectedRecords.map(record => record.email).join(', ');
     const names = selectedRecords.map(record => record.name).join(', ');
-  
+
     // Prepare the data dictionary
     const formData = {
       name: names,
@@ -42,14 +43,14 @@ const SendEmail = ({ onBack, onClosePopup }) => {
       message: message,
       image: null, // initialize as null if no image is provided
     };
-  
+
     // If an image is provided, convert it to base64 and add it to formData
     if (image) {
       const reader = new FileReader();
       reader.readAsDataURL(image);
       reader.onloadend = async () => {
         formData.image = reader.result;
-  
+
         // Send the API call after image is converted
         await sendEmailRequest(formData);
       };
@@ -58,12 +59,12 @@ const SendEmail = ({ onBack, onClosePopup }) => {
       await sendEmailRequest(formData);
     }
   };
-  
-  // Helper function for API call                 
+
+  // Helper function for API call
   const sendEmailRequest = async (formData) => {
     const URL = `${process.env.REACT_APP_BACKEND_URL}/api/sendEmails`;
     console.log(URL);
-  
+
     try {
       const response = await fetch(URL, {
         method: 'POST',
@@ -72,10 +73,10 @@ const SendEmail = ({ onBack, onClosePopup }) => {
         },
         body: JSON.stringify(formData),
       });
-  
+
       const text = await response.text();
       console.log("Server Response:", text);
-  
+
       if (!response.ok) {
         try {
           const errorData = JSON.parse(text);
@@ -84,10 +85,10 @@ const SendEmail = ({ onBack, onClosePopup }) => {
           throw new Error('Server returned HTML error page');
         }
       }
-  
+
       const data = JSON.parse(text);
       console.log("Parsed Response:", data);
-  
+
       setSuccessMessage(data.message);
       setShowPopup(true);
     } catch (error) {
@@ -97,11 +98,9 @@ const SendEmail = ({ onBack, onClosePopup }) => {
       setLoading(false);
     }
   };
-  
 
-  const handleClosePopup = () => {
-    setShowPopup(false);
-    onClosePopup();
+  const redirectToHome = () => {
+    navigate('/'); // Redirect to root path
   };
 
   return (
@@ -143,14 +142,14 @@ const SendEmail = ({ onBack, onClosePopup }) => {
         {loading ? 'Sending...' : 'Send Email'}
       </button>
 
-      <button onClick={onBack} className="backButton">Back</button>
+      <button onClick={redirectToHome} className="backButton">Back</button>
 
       {showPopup && (
         <div className="popup">
           <div className="popupContent">
             {successMessage && <p className="successMessage">{successMessage}</p>}
             {errorMessage && <p className="errorMessage">{errorMessage}</p>}
-            <button onClick={handleClosePopup} className="popupButton">
+            <button onClick={redirectToHome} className="popupButton">
               OK
             </button>
           </div>
