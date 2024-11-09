@@ -40,8 +40,10 @@ const SendSms = ({ onBack }) => {
           let attempts = 0;
           const maxAttempts = 3;
           while (attempts < maxAttempts) {
+            const URL = `${process.env.REACT_APP_BACKEND_URL}/api/send_sms`;
+
             try {
-              const response = await fetch('/api/send_sms', {
+              const response = await fetch(URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({

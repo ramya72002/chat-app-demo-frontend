@@ -70,13 +70,13 @@ const SearchUsers = ({ onClose }) => {
                 provider: user.provider
             }));
             console.log("Selected Users Data:", sendSmsData);
-
-          
-            navigate('/sendSms',  { selectedRecords: sendSmsData });
+    
+            navigate('/sendSms', { state: { selectedRecords: sendSmsData } }); // Pass `selectedRecords` using `state`
         } catch (error) {
             toast.error("Error sending SMS: " + error?.message);
         }
     };
+    
 
     return (
         <div className='fixed top-0 bottom-0 left-0 right-0 bg-slate-700 bg-opacity-40 p-2 z-10'>
