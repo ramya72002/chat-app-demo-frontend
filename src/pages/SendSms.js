@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Assuming you are using react-router-dom for navigation
+import { useLocation, useNavigate } from 'react-router-dom'; // Assuming you are using react-router-dom for navigation
 import './SendSms.scss';
 
-const SendSms = ({ selectedRecords }) => {
-  const navigate = useNavigate();
+const SendSms = ({ onBack }) => {
+  const location = useLocation();
+  const navigate = useNavigate(); // useNavigate hook for programmatic navigation
+  const selectedRecords = location.state?.selectedRecords || []; // Access selectedRecords
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
@@ -18,6 +20,7 @@ const SendSms = ({ selectedRecords }) => {
     setSuccessMessage('');
 
     const providerGroups = {};
+    console.log("sfffff",selectedRecords)
     selectedRecords.forEach(record => {
       if (!providerGroups[record.provider]) {
         providerGroups[record.provider] = [];

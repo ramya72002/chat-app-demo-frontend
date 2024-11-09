@@ -71,10 +71,8 @@ const SearchUsers = ({ onClose }) => {
             }));
             console.log("Selected Users Data:", sendSmsData);
 
-            // const response = await axios.post('/api/sendSms', sendSmsData);
-            // console.log("SMS sent successfully", response.data);
-
-            navigate('/sendSms', { state: { selectedRecords: selectedUsers } });
+          
+            navigate('/sendSms',  { selectedRecords: sendSmsData });
         } catch (error) {
             toast.error("Error sending SMS: " + error?.message);
         }
