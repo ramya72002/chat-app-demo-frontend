@@ -9,6 +9,7 @@ import AuthLayouts from "../layout";
 import Forgotpassword from "../pages/Forgotpassword";
 import SendEmail from "../pages/SendEmail";
 import SendSms from "../pages/SendSms";
+import Groups from "../pages/Groups";
 
 const router = createBrowserRouter([
 {
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
         {
             path : 'sendSms',
             element : <AuthLayouts><SendSms/></AuthLayouts>
+        },
+        {
+            path : "Groups",
+            element : <AuthLayouts><Groups/></AuthLayouts>
         },
         {
             path : "",

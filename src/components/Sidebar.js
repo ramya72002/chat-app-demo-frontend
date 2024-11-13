@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
+import {toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { IoChatbubbleEllipses } from "react-icons/io5";
-import { FaUserPlus,FaEnvelope,FaSms  } from "react-icons/fa";
+import { FaUserPlus,FaEnvelope,FaSms ,FaUsers } from "react-icons/fa";
 import { NavLink, useNavigate } from 'react-router-dom';
 import { BiLogOut } from "react-icons/bi";
 import Avatar from './Avatar'
 import { useDispatch, useSelector } from 'react-redux';
 import EditUserDetails from './EditUserDetails';
-import Divider from './Divider';
 import { FiArrowUpLeft } from "react-icons/fi";
 import SearchUser from './SearchUser';
 import SearchUsers from './SearchUsers';
@@ -16,12 +15,14 @@ import SearchUsersSms from './SearchUsersSms';
 import { FaImage } from "react-icons/fa6";
 import { FaVideo } from "react-icons/fa6";
 import { logout } from '../redux/userSlice';
+import Groups from '../pages/Groups';
 
 const Sidebar = () => {
     const user = useSelector(state => state?.user)
     const [editUserOpen,setEditUserOpen] = useState(false)
     const [allUser,setAllUser] = useState([])
     const [openSearchUser,setOpenSearchUser] = useState(false)
+    const [openGroupChat,setOpenGroupChat] = useState(false)
     const [openSearchUsers,setOpenSearchUsers] = useState(false)
     const [openSearchUsersSms,setOpenSearchUsersSms] = useState(false)
 
@@ -29,6 +30,11 @@ const Sidebar = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const [soundPlayed, setSoundPlayed] = useState(false); // Track if sound has already played
+    const handleOpenGroupChat = () => {
+        setOpenGroupChat(true); // Update state if needed for other UI effects
+        navigate(`/Groups?userId=${user._id}`); // Pass userId as a query parameter
+    };
+    
 
 
     // Load the notification sound
@@ -100,6 +106,9 @@ const Sidebar = () => {
                     <div title='add friend' onClick={()=>setOpenSearchUser(true)} className='w-12 h-12 flex justify-center items-center cursor-pointer hover:bg-slate-200 rounded' >
                         <FaUserPlus size={20}/>
                     </div>
+                    {/* <div title='Group chat' onClick={handleOpenGroupChat} className='w-12 h-12 flex justify-center items-center cursor-pointer hover:bg-slate-200 rounded' >
+                        <FaUsers size={20}/>
+                    </div> */}
 
                     <div title='Send bulk email messages' onClick={()=>setOpenSearchUsers(true)} className='w-12 h-12 flex justify-center items-center cursor-pointer hover:bg-slate-200 rounded' >
                         <FaEnvelope size={20}/>
@@ -215,11 +224,17 @@ const Sidebar = () => {
                     <SearchUsers onClose={()=>setOpenSearchUsers(false)}/>
                 )
             }
-                 {
+            {
                 openSearchUsersSms && (
                     <SearchUsersSms onClose={()=>setOpenSearchUsersSms(false)}/>
                 )
             }
+            
+            {
+                openGroupChat && (
+                    <Groups onClose={() => setOpenGroupChat(false)} />
+            )}
+             
         </div>
   )
 }
