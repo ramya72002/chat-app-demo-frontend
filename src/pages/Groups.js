@@ -30,7 +30,7 @@ const Groups = ({ onClose }) => {
 
         if (socketConnection) {
             socketConnection.emit('message-page', userId);
-            socketConnection.emit('fetch-user-groups', userId);
+            // socketConnection.emit('fetch-user-groups', userId);
 
             socketConnection.on('user-groups', (data) => {
                 setGroups(Array.isArray(data) ? data : []);
