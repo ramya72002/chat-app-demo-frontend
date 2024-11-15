@@ -35,7 +35,7 @@ const Sidebar = () => {
 
     const handleOpenGroupChat = () => {
         setOpenGroupChat(true); // Update state if needed for other UI effects
-        navigate(`/Groups?userId=${user._id}`); // Pass userId as a query parameter
+        navigate(`/Groups?${user._id}`); // Pass userId as a query parameter
     };
     
      // Load the notification sound
@@ -70,7 +70,6 @@ const Sidebar = () => {
                 
                 // Handle the 'fetch-user-groups' event
                 socketConnection.on('fetch-user-groups', (data) => {
-                console.log('group conversations', data);
 
                 const groupData = data.map((groupConversation) => {
                     // Check if the group conversation has a message or any other data to process
@@ -258,7 +257,11 @@ const Sidebar = () => {
 {
     allUserGroups.map((group, index) => {
         return (
-            <NavLink to={"/" + group?._id} key={group?._id} className='flex items-center gap-2 py-3 px-2 border border-transparent hover:border-primary rounded hover:bg-slate-100 cursor-pointer'>
+            <NavLink
+                to={`/Groups/${user._id}/${group?._id}`}
+                key={group?._id}
+                className='flex items-center gap-2 py-3 px-2 border border-transparent hover:border-primary rounded hover:bg-slate-100 cursor-pointer'
+            >
                 <div>
                     <Avatar imageUrl={group?.profile_pic} name={group?.groupName} width={40} height={40} />
                 </div>

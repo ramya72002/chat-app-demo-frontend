@@ -9,6 +9,7 @@ import AuthLayouts from "../layout";
 import Forgotpassword from "../pages/Forgotpassword";
 import SendEmail from "../pages/SendEmail";
 import SendSms from "../pages/SendSms";
+import GroupMessagePage from "../components/GroupMessagePage";
 // import Groups from "../pages/Groups";
 // import GroupMessagePage from "../components/GroupMessagePage";
 
@@ -52,15 +53,17 @@ const router = createBrowserRouter([
             ]
         },
         {
-            path : "Groups",
-            element : <Home/>,
-            // children : [
-            //     {
-            //         path : ':userId',
-            //         element : <Groups/>
-            //     }
-            // ]
-        }
+            path: "Groups",
+            element: <Home />,
+            children: [
+              {
+                path: ":userId/:groupId", // Nested route for userId and groupId
+                element: <GroupMessagePage/>,
+              },
+            ],
+          }
+          
+        
     ]
 }
 ])

@@ -59,20 +59,25 @@ const Home = () => {
   },[])
 
 
-  const basePath = location.pathname === '/'
+  const basePath = location.pathname === '/'|| location.pathname.startsWith('/Groups')
+  const isGroupMessagePage = location.pathname.startsWith('/Groups/') && location.pathname.split('/').length >= 2;
   return (
     <div className='grid lg:grid-cols-[300px,1fr] h-screen max-h-screen'>
         <section className={`bg-white ${!basePath && "hidden"} lg:block`}>
            <Sidebar/>
         </section>
 
-        {/**message component**/}
+       {isGroupMessagePage && (
+  <section className={`${basePath}`}>
+    <Outlet />
+  </section>
+)}
+ {/**message component**/}
         <section className={`${basePath && "hidden"}`} >
             <Outlet/>
-        </section>
+        </section>         
 
-
-        <div className={`justify-center items-center flex-col gap-2 hidden ${!basePath ? "hidden" : "lg:flex" }`}>
+        <div className={`justify-center items-center flex-col gap-2 hidden ${(isGroupMessagePage || !basePath) ? "hidden" : "lg:flex" }`}>
             <div>
               <img
                 src={logo}

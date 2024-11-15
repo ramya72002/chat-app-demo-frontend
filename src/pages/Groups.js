@@ -32,9 +32,9 @@ const Groups = ({ onClose }) => {
             socketConnection.emit('message-page', userId);
             // socketConnection.emit('fetch-user-groups', userId);
 
-            socketConnection.on('user-groups', (data) => {
-                setGroups(Array.isArray(data) ? data : []);
-            });
+            // socketConnection.on('user-groups', (data) => {
+            //     setGroups(Array.isArray(data) ? data : []);
+            // });
 
             socketConnection.on('groupCreated', () => {
                 socketConnection.emit('fetch-user-groups', userId);
