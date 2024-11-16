@@ -72,6 +72,7 @@ const Sidebar = () => {
                         };
                     }
                 });
+                setAllUser(conversationUserData);
                 
                 // Handle the 'fetch-user-groups' event
                 socketConnection.on('fetch-user-groups', (data) => {
@@ -91,11 +92,7 @@ const Sidebar = () => {
                 console.log('Processed group data:', groupData);
                 setAllUserGroups(groupData);
                 });
-
-
-                setAllUser(conversationUserData);
                 
-
                 // Check for any unseen messages
                 const hasUnseenMsg = conversationUserData.some(conv => Boolean(conv.unseenMsg));
                 if (hasUnseenMsg && !soundPlayed) {  // Only play if sound hasn't played yet
