@@ -1,5 +1,5 @@
 import React from 'react'
-import logo from '../assets/logo.png'
+import logo from '../assets/nvislogo.png'
 
 const AuthLayouts = ({children}) => {
   return (
@@ -8,7 +8,7 @@ const AuthLayouts = ({children}) => {
             <img 
               src={logo}
               alt='logo'
-              width={180}
+              width={250}
               height={60}
             />
         </header>
