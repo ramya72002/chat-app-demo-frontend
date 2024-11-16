@@ -6,7 +6,7 @@ import UserSearchCard from './UserSearchCard';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 
-const SearchGroupMembers = ({ onClose }) => {
+const SearchGroupMembers = ({ onClose, setGroupCreated}) => {
     const [searchGroupMembers, setSearchGroupMembers] = useState([]);
     const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState("");
@@ -57,21 +57,28 @@ const SearchGroupMembers = ({ onClose }) => {
             toast.error("Please enter a group name");
             return;
         }
-
+    
         const groupData = {
             groupName,
             members: selectedUsers,
         };
-
+    
         const URL = `${process.env.REACT_APP_BACKEND_URL}/api/create-group`;
         try {
-            await axios.post(URL, groupData);
-            toast.success("Group created successfully!");
-            onClose();
+            const response = await axios.post(URL, groupData);
+            if (response.data.success) {
+                toast.success("Group created successfully!");
+                setGroupCreated(true);
+                setTimeout(() => setGroupCreated(false), 1000); // Reset after 3 seconds
+                onClose();
+            } else {
+                toast.error(response.data.message || "Failed to create group");
+            }
         } catch (error) {
             toast.error(error?.response?.data?.message || "Failed to create group");
         }
     };
+    
 
     return (
         <div className='fixed top-0 bottom-0 left-0 right-0 bg-slate-700 bg-opacity-40 p-2 z-10'>

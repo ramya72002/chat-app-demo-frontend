@@ -16,6 +16,7 @@ import SearchGroupMembers from './SearchGroupMembers';
 import { FaImage } from "react-icons/fa6";
 import { FaVideo } from "react-icons/fa6";
 import { logout } from '../redux/userSlice';
+import axios from 'axios'; // Ensure you have axios imported
 
 const Sidebar = () => {
     const user = useSelector(state => state?.user);
@@ -27,6 +28,8 @@ const Sidebar = () => {
     const [isSearchGroupMembersVisible, setSearchGroupMembersVisible] = useState(false);
     const [openSearchUsers, setOpenSearchUsers] = useState(false);
     const [openSearchUsersSms, setOpenSearchUsersSms] = useState(false);
+    const [groupCreated, setGroupCreated] = useState(false);
+
 
     const socketConnection = useSelector(state => state?.user?.socketConnection);
     const dispatch = useDispatch();
@@ -37,6 +40,15 @@ const Sidebar = () => {
     const handleOpenGroupChat = () => {
         setOpenGroupChat(true); // Update state if needed for other UI effects
         navigate(`/Groups?${user._id}`); // Pass userId as a query parameter
+    };
+    const fetchUserGroups = async (userId) => {
+        try {
+            const response = await axios.get(`http://localhost:8080/api/user-groups?userId=${userId}`);
+            setAllUserGroups(response.data.data);
+        } catch (error) {
+            console.error("Error fetching user groups:", error);
+            toast.error("Failed to fetch user groups. Please try again.");
+        }
     };
     const handleSearchGroupMembersToggle = () => {
         setSearchGroupMembersVisible((prev) => !prev); // Toggle visibility
@@ -107,9 +119,13 @@ const Sidebar = () => {
                         draggable: true,
                     });
                 }
-            });
+                });
+                if(groupCreated)
+                    {
+                        fetchUserGroups(user._id);
+                    }
         }
-    }, [socketConnection, user, soundPlayed]);
+    }, [socketConnection, user, soundPlayed,groupCreated]);
 
     const handleLogout = () => {
         dispatch(logout());
@@ -308,9 +324,12 @@ const Sidebar = () => {
             {/* Search users for SMS */}
             {openSearchUsersSms && <SearchUsersSms onClose={() => setOpenSearchUsersSms(false)} />}
             {isSearchGroupMembersVisible && (
-                        <div className='absolute top-0 left-0 w-full h-full bg-white z-50 p-4'>
-                            <SearchGroupMembers onClose={() => setSearchGroupMembersVisible(false)} />
-                        </div>
+                       <div className='absolute top-0 left-0 w-full h-full bg-white z-50 p-4'>
+                       <SearchGroupMembers 
+                           onClose={() => setSearchGroupMembersVisible(false)} 
+                           setGroupCreated={setGroupCreated}
+                       />
+                   </div>
                     )}
         </div>
     );
