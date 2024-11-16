@@ -15,7 +15,7 @@ const SearchUsers = ({ onClose }) => {
     const navigate = useNavigate();
 
     const handleSearchUsers = async () => {
-        const URL = `${process.env.REACT_APP_BACKEND_URL}/api/search-users`;
+        const URL = `${process.env.REACT_APP_BACKEND_URL}/api/search-user`;
         try {
             setLoading(true);
             const response = await axios.post(URL, { search });
