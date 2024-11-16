@@ -10,8 +10,6 @@ import Forgotpassword from "../pages/Forgotpassword";
 import SendEmail from "../pages/SendEmail";
 import SendSms from "../pages/SendSms";
 import GroupMessagePage from "../components/GroupMessagePage";
-// import Groups from "../pages/Groups";
-// import GroupMessagePage from "../components/GroupMessagePage";
 
 const router = createBrowserRouter([
 {

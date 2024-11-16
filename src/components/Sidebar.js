@@ -16,7 +16,6 @@ import SearchGroupMembers from './SearchGroupMembers';
 import { FaImage } from "react-icons/fa6";
 import { FaVideo } from "react-icons/fa6";
 import { logout } from '../redux/userSlice';
-import Groups from '../pages/Groups';
 
 const Sidebar = () => {
     const user = useSelector(state => state?.user);
