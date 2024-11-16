@@ -19,7 +19,7 @@ const Groups = ({ onClose }) => {
     useEffect(() => {
         const fetchGroups = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/user-groups?userId=${userId}`);
+                const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/user-groups?userId=${userId}`);
                 setGroups(response.data.data || []);
             } catch (error) {
                 console.error("Error fetching groups via API:", error);
@@ -60,7 +60,7 @@ const Groups = ({ onClose }) => {
         setSoundPlayed(false);
 
         try {
-            const response = await axios.get(`http://localhost:8080/api/group-messages?groupId=${group._id}`);
+            const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/group-messages?groupId=${group._id}`);
             setMessages(response.data.data);
         } catch (error) {
             console.error('Error fetching group messages:', error);
@@ -85,7 +85,7 @@ const Groups = ({ onClose }) => {
         try {
             socketConnection.emit('sendGroupMessage', messageData);
 
-            const response = await axios.post('http://localhost:8080/api/send-group-message', messageData);
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/send-group-message`, messageData);
 
             if (response.data.success) {
                 setMessages((prevMessages) => [...prevMessages, response.data.data]);

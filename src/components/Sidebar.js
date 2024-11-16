@@ -12,6 +12,7 @@ import { FiArrowUpLeft } from "react-icons/fi";
 import SearchUser from './SearchUser';
 import SearchUsers from './SearchUsers';
 import SearchUsersSms from './SearchUsersSms';
+import SearchGroupMembers from './SearchGroupMembers';
 import { FaImage } from "react-icons/fa6";
 import { FaVideo } from "react-icons/fa6";
 import { logout } from '../redux/userSlice';
@@ -24,6 +25,7 @@ const Sidebar = () => {
     const [allUserGroups, setAllUserGroups] = useState([]);
     const [openSearchUser, setOpenSearchUser] = useState(false);
     const [openGroupChat, setOpenGroupChat] = useState(false);
+    const [isSearchGroupMembersVisible, setSearchGroupMembersVisible] = useState(false);
     const [openSearchUsers, setOpenSearchUsers] = useState(false);
     const [openSearchUsersSms, setOpenSearchUsersSms] = useState(false);
 
@@ -36,6 +38,9 @@ const Sidebar = () => {
     const handleOpenGroupChat = () => {
         setOpenGroupChat(true); // Update state if needed for other UI effects
         navigate(`/Groups?${user._id}`); // Pass userId as a query parameter
+    };
+    const handleSearchGroupMembersToggle = () => {
+        setSearchGroupMembersVisible((prev) => !prev); // Toggle visibility
     };
     
      // Load the notification sound
@@ -232,7 +237,7 @@ const Sidebar = () => {
             {/* "+" Button to create new group */}
             <button 
                 className='bg-blue-500 text-white rounded-full p-2 ml-1 flex items-end  hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 active:scale-95 transition-all duration-300 shadow-md'
-                onClick={() => {/* Add your logic here for creating a new group */}}
+                onClick={handleSearchGroupMembersToggle}
                 title='Create New Group'
             > 
             
@@ -306,6 +311,11 @@ const Sidebar = () => {
             {openSearchUsers && <SearchUsers onClose={() => setOpenSearchUsers(false)} />}
             {/* Search users for SMS */}
             {openSearchUsersSms && <SearchUsersSms onClose={() => setOpenSearchUsersSms(false)} />}
+            {isSearchGroupMembersVisible && (
+                        <div className='absolute top-0 left-0 w-full h-full bg-white z-50 p-4'>
+                            <SearchGroupMembers onClose={() => setSearchGroupMembersVisible(false)} />
+                        </div>
+                    )}
         </div>
     );
 };
