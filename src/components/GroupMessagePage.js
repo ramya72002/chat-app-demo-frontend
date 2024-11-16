@@ -215,19 +215,19 @@ const GroupMessagePage = () => {
           )}
         </div>
 
-        <form className="h-full w-full flex gap-2" onSubmit={handleSendMessage}>
-        
-          <input
-            className="w-full border px-4 py-2 rounded-full"
-            placeholder="Type your message..."
-            name="text"
-            value={message.text}
-            onChange={handleOnChange}
-          />
-          <button className="bg-primary text-white p-3 rounded-full">
-            <IoMdSend size={30} />
-          </button>
-        </form>
+        <form className='h-full w-full flex gap-2' onSubmit={handleSendMessage}>
+                  <input
+                    type='text'
+                    placeholder='Type here message...'
+                    className='py-1 px-4 outline-none w-full h-full'
+                    value={message.text}
+                    onChange={handleOnChange}
+                  />
+                  <button className='text-primary hover:text-secondary'>
+                      <IoMdSend size={28}/>
+                  </button>
+              </form>
+              
       </section>
     </div>
   );
