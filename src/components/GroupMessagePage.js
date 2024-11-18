@@ -81,13 +81,15 @@ const GroupMessagePage = () => {
     if (socketConnection) {
       socketConnection.emit('group-message-page', params.userId, params.groupId);
 
+      socketConnection.emit('group-seen',params.groupId,params.userId)
+      
       socketConnection.on('group-name', (data) => {
         console.log("Group name received:", data.groupName);
         setDataUser(data);
       });
 
       socketConnection.on('group-message-user', (data) => {
-        console.log('Group Message data1:', data);
+        console.log('Group Message data11:', data);
         setAllMessage(data);
       });
 
