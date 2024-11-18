@@ -158,14 +158,15 @@ const Sidebar = () => {
             <div className='bg-slate-100 w-12 h-full rounded-tr-lg rounded-br-lg py-5 text-slate-600 flex flex-col justify-between'>
                 <div>
                 <NavLink 
-                        to="/"  // Make sure to specify a valid path here
-                        className={({ isActive }) => `w-12 h-12 flex justify-center items-center cursor-pointer hover:bg-slate-200 rounded ${isActive && "bg-slate-200"}`}
+                        to="/" // Make sure to specify a valid path here
+                        className={({ isActive }) => `w-12 h-12 flex justify-center items-center cursor-pointer hover:bg-slate-200 rounded relative ${isActive && "bg-slate-200"}`}
                         title="chat"
                         >
                         <IoChatbubbleEllipses size={20} />
+                        {allUser.some(conv => conv.unseenMsg) && (
+                            <span className="absolute top-0 right-0 w-3 h-3 bg-green-500 rounded-full"></span>
+                        )}
                 </NavLink>
-
-
 
                     <div title='add friend' onClick={() => setOpenSearchUser(true)} className='w-12 h-12 flex justify-center items-center cursor-pointer hover:bg-slate-200 rounded' >
                         <FaUserPlus size={20} />
