@@ -102,6 +102,23 @@ const Sidebar = () => {
                 // Handle any additional logic if needed after processing groupData
                 console.log('Processed group data:', groupData);
                 setAllUserGroups(groupData);
+                const hasUnseenMessages = groupData.some(group => group.unseenMessages > 0);
+                    if (hasUnseenMessages && !soundPlayed) {
+                        // Play notification sound if there are unseen messages and sound hasn't been played yet
+                        notificationSound.play();
+                        setSoundPlayed(true); // Set soundPlayed to true after playing the sound
+
+                        // Show a toast notification
+                        toast.info("You have new group messages!", {
+                            position: "top-right",
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                        });
+                    }
+                
                 });
                 
                 // Check for any unseen messages
