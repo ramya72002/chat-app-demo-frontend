@@ -163,7 +163,7 @@ const Sidebar = () => {
                         title="chat"
                         >
                         <IoChatbubbleEllipses size={20} />
-                        </NavLink>
+                </NavLink>
 
 
 
@@ -174,10 +174,14 @@ const Sidebar = () => {
                     <div 
                         title="Group chat" 
                         onClick={handleOpenGroupChat} 
-                        className="w-12 h-12 flex justify-center items-center cursor-pointer hover:bg-slate-200 rounded" 
-                        >
+                        className="w-12 h-12 flex justify-center items-center cursor-pointer hover:bg-slate-200 rounded relative"
+                    >
                         <FaUsers size={20} />
-                        </div>
+                        {/* Show the dot if there are unseen messages */}
+                        {allUserGroups.some(group => group.unseenMessages > 0) && (
+                            <span className="absolute top-0 right-0 w-3 h-3 bg-green-500 rounded-full"></span>
+                        )}
+                    </div>
 
                     <div title='Send bulk email messages' onClick={() => setOpenSearchUsers(true)} className='w-12 h-12 flex justify-center items-center cursor-pointer hover:bg-slate-200 rounded' >
                         <FaEnvelope size={20} />
