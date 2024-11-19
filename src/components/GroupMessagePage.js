@@ -1,30 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
-import { FaAngleLeft } from "react-icons/fa6";
-import { FaPlus } from "react-icons/fa6";
-import { FaImage } from "react-icons/fa6";
-import { FaVideo } from "react-icons/fa6";
-import uploadFile from '../helpers/uploadFile';
+import { FaAngleLeft, FaPlus, FaImage, FaVideo } from "react-icons/fa6";
 import { IoClose } from "react-icons/io5";
-import Loading from './Loading';
-import backgroundImage from '../assets/wallapaper.jpeg';
 import { IoMdSend } from "react-icons/io";
 import moment from 'moment';
+import uploadFile from '../helpers/uploadFile';
+import Loading from './Loading';
+import backgroundImage from '../assets/wallapaper.jpeg';
 
 const GroupMessagePage = () => {
   const params = useParams();
   const socketConnection = useSelector(state => state?.user?.socketConnection);
   const user = useSelector(state => state?.user);
-  const [dataUser, setDataUser] = useState({
-    groupName: ""
-  });
+  const [dataUser, setDataUser] = useState({ groupName: "" });
   const [openImageVideoUpload, setOpenImageVideoUpload] = useState(false);
-  const [message, setMessage] = useState({
-    text: "",
-    imageUrl: "",
-    videoUrl: ""
-  });
+  const [message, setMessage] = useState({ text: "", imageUrl: "", videoUrl: "" });
   const [loading, setLoading] = useState(false);
   const [allMessage, setAllMessage] = useState([]);
   const currentMessage = useRef(null);
@@ -82,7 +73,7 @@ const GroupMessagePage = () => {
       socketConnection.emit('group-message-page', params.userId, params.groupId);
 
       socketConnection.emit('group-seen',params.groupId,params.userId)
-      
+
       socketConnection.on('group-name', (data) => {
         console.log("Group name received:", data.groupName);
         setDataUser(data);
@@ -108,25 +99,34 @@ const GroupMessagePage = () => {
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (message.text || message.imageUrl || message.videoUrl) {
-        if (socketConnection) {
+      if (socketConnection) {
             // Emit to multiple users in the group (e.g., group members)
-            socketConnection.emit('new group message', {
-                senderId: user?._id,
+        socketConnection.emit('new group message', {
+          senderId: user?._id,
                 groupId: params.groupId,  // Add the group ID
-                text: message.text,
-                imageUrl: message.imageUrl,
-                videoUrl: message.videoUrl,
-                msgByUserId: user?._id
-            });
+          text: message.text,
+          imageUrl: message.imageUrl,
+          videoUrl: message.videoUrl,
+          msgByUserId: user?._id
+        });
             setMessage({
                 text: "",
                 imageUrl: "",
                 videoUrl: ""
             });
-        }
+      }
     }
-};
+  };
 
+  const groupMessagesByDate = (messages) => {
+    const grouped = {};
+    messages.forEach((msg) => {
+      const date = moment(msg.createdAt).format('YYYY-MM-DD');
+      if (!grouped[date]) grouped[date] = [];
+      grouped[date].push(msg);
+    });
+    return Object.entries(grouped);
+  };
 
   return (
     <div style={{ backgroundImage: `url(${backgroundImage})` }} className="bg-no-repeat bg-cover">
@@ -140,53 +140,61 @@ const GroupMessagePage = () => {
       </header>
 
       <section className="h-[calc(100vh-128px)] overflow-x-hidden overflow-y-scroll scrollbar relative bg-slate-200 bg-opacity-50">
-        <div className="flex flex-col gap-2 py-2 mx-2" ref={currentMessage}>
-          {allMessage.map((msg, index) => (
-            <div
-              key={index}
-              className={`p-1 py-1 rounded w-fit max-w-[280px] md:max-w-sm lg:max-w-md ${user._id === msg?.msgByUserId ? "ml-auto bg-teal-100" : "bg-white"}`}
-            >
-              <div className="w-full relative">
-                {msg?.imageUrl && <img src={msg?.imageUrl} className="w-full h-full object-scale-down" />}
-                {msg?.videoUrl && <video src={msg.videoUrl} className="w-full h-full object-scale-down" controls />}
-              </div>
-              <h1>{msg.msgByName}</h1>
-              <p className="px-2">{msg.text}</p>
-              <p className="text-xs ml-auto w-fit">{moment(msg.createdAt).format("hh:mm")}</p>
+  <div className="flex flex-col py-2 mx-2" ref={currentMessage}>
+    {groupMessagesByDate(allMessage).map(([date, messages]) => (
+      <div key={date}>
+        <div className="text-center text-gray-500 my-2">{moment(date).format('MMMM D, YYYY')}</div>
+        {messages.map((msg, index) => (
+          <div
+            key={index}
+            className={`p-1 py-1 rounded w-fit max-w-[280px] md:max-w-sm lg:max-w-md ${
+              user._id === msg?.msgByUserId ? "ml-auto bg-teal-100" : "bg-white"
+            } mb-2`}  
+          >
+            <div className="w-full relative">
+              {msg?.imageUrl && <img src={msg?.imageUrl} className="w-full h-full object-scale-down" />}
+              {msg?.videoUrl && <video src={msg.videoUrl} className="w-full h-full object-scale-down" controls />}
             </div>
-          ))}
-        </div>
-
-        {/* Upload Image Display */}
-        {message.imageUrl && (
-          <div className="w-full h-full sticky bottom-0 bg-slate-700 bg-opacity-30 flex justify-center items-center rounded overflow-hidden">
-            <div className="w-fit p-2 absolute top-0 right-0 cursor-pointer hover:text-red-600" onClick={handleClearUploadImage}>
-              <IoClose size={30} />
-            </div>
-            <div className="bg-white p-3">
-              <img src={message.imageUrl} alt="UploadImage" className="aspect-square w-full h-full max-w-sm m-2 object-scale-down" />
-            </div>
+            <h1>{msg.msgByName}</h1>
+            <p className="px-2">{msg.text}</p>
+            <p className="text-xs ml-auto w-fit">{moment(msg.createdAt).format("hh:mm")}</p>
           </div>
-        )}
+        ))}
+      </div>
+    ))}
+  </div>
 
-        {/* Upload Video Display */}
-        {message.videoUrl && (
-          <div className="w-full h-full sticky bottom-0 bg-slate-700 bg-opacity-30 flex justify-center items-center rounded overflow-hidden">
-            <div className="w-fit p-2 absolute top-0 right-0 cursor-pointer hover:text-red-600" onClick={handleClearUploadVideo}>
-              <IoClose size={30} />
-            </div>
-            <div className="bg-white p-3">
-              <video src={message.videoUrl} className="aspect-square w-full h-full max-w-sm m-2 object-scale-down" controls muted autoPlay />
-            </div>
-          </div>
-        )}
+  {/* Upload Image Display */}
+  {message.imageUrl && (
+    <div className="w-full h-full sticky bottom-0 bg-slate-700 bg-opacity-30 flex justify-center items-center rounded overflow-hidden">
+      <div className="w-fit p-2 absolute top-0 right-0 cursor-pointer hover:text-red-600" onClick={handleClearUploadImage}>
+        <IoClose size={30} />
+      </div>
+      <div className="bg-white p-3">
+        <img src={message.imageUrl} alt="UploadImage" className="aspect-square w-full h-full max-w-sm m-2 object-scale-down" />
+      </div>
+    </div>
+  )}
 
-        {loading && (
-          <div className="w-full h-full flex sticky bottom-0 justify-center items-center">
-            <Loading />
-          </div>
-        )}
-      </section>
+  {/* Upload Video Display */}
+  {message.videoUrl && (
+    <div className="w-full h-full sticky bottom-0 bg-slate-700 bg-opacity-30 flex justify-center items-center rounded overflow-hidden">
+      <div className="w-fit p-2 absolute top-0 right-0 cursor-pointer hover:text-red-600" onClick={handleClearUploadVideo}>
+        <IoClose size={30} />
+      </div>
+      <div className="bg-white p-3">
+        <video src={message.videoUrl} className="aspect-square w-full h-full max-w-sm m-2 object-scale-down" controls muted autoPlay />
+      </div>
+    </div>
+  )}
+
+  {loading && (
+    <div className="w-full h-full flex sticky bottom-0 justify-center items-center">
+      <Loading />
+    </div>
+  )}
+</section>
+
 
       <section className="h-16 bg-white flex items-center px-4">
         <div className="relative">
@@ -218,17 +226,17 @@ const GroupMessagePage = () => {
         </div>
 
         <form className='h-full w-full flex gap-2' onSubmit={handleSendMessage}>
-                  <input
-                    type='text'
-                    placeholder='Type here message...'
-                    className='py-1 px-4 outline-none w-full h-full'
-                    value={message.text}
-                    onChange={handleOnChange}
-                  />
-                  <button className='text-primary hover:text-secondary'>
+          <input
+            type='text'
+            placeholder='Type here message...'
+            className='py-1 px-4 outline-none w-full h-full'
+            value={message.text}
+            onChange={handleOnChange}
+          />
+          <button className='text-primary hover:text-secondary'>
                       <IoMdSend size={28}/>
-                  </button>
-              </form>
+          </button>
+        </form>
               
       </section>
     </div>
